@@ -1,0 +1,34 @@
+const dados = vars['data_parsedBody'];
+
+// Mapear a Data, Hora e CodHorario
+var datas_horas_codigos = dados.map(function(item){
+    var partesData = item.Data.split('/');
+    // Converter a data para o formato dd/mm/yyyy
+    var dataFormatada = partesData[0] + '/' + partesData[1] + '/' + partesData[2];
+    return {
+        dataHora: dataFormatada + ' ' + item.Hora,
+        codHorario: item.CodHorario
+    };
+});
+
+// Filtrar para uma data específica, por exemplo, '26/12/2024'
+var dataEspecifica = vars['datamarcada'];
+var horariosEspecificos = datas_horas_codigos.filter(function(item){
+    return item.dataHora.startsWith(dataEspecifica);
+});
+
+// Extrair apenas a hora dos horários específicos
+var horasApenas = horariosEspecificos.map(function(item) {
+    return item.dataHora.split(' ')[1];
+});
+
+// Combinar CodHorario com sua hora respectiva
+var codigosComHoras = horariosEspecificos.map(function(item) {
+    return item.codHorario + ' ' + item.dataHora.split(' ')[1];
+});
+
+// Converta o array de horas em uma string usando join
+vars['hora_disponivel'] = horasApenas.join('\n');
+
+// Converta o array de CodHorarios com suas horas em uma string usando join
+vars['codigos_com_horas'] = codigosComHoras.join('\n');
